@@ -1,0 +1,20 @@
+# CloudLinux Monitor configuration
+
+BASE="/var/www/html/cloudlinux-monitor"
+
+# CPU / RAM / Disk threshold
+THRESHOLD=80
+
+# Runtime retention
+RETENTION_DAYS=90
+
+# Rolling report period
+DAYS=15
+
+# Maximum CloudLinux users
+LIMIT=1000
+
+# Binary paths
+CLOUDLINUX_STATISTICS="/usr/sbin/cloudlinux-statistics"
+WHMAPI="/usr/local/cpanel/bin/whmapi1"
+JQ="/usr/bin/jq"

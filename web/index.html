@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CloudLinux Monitor</title>
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f5f6f8;
+    color: #222;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px;
+}
+
+h1 {
+    margin-bottom: 5px;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.section-title {
+    margin: 30px 0 15px;
+}
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    min-width: 170px;
+    flex: 1;
+}
+
+.card-title {
+    color: #666;
+    font-size: 14px;
+}
+
+.card-value {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.upgrade { border-left: 5px solid #d32f2f; }
+.review  { border-left: 5px solid #f57c00; }
+.watch   { border-left: 5px solid #fbc02d; }
+.normal  { border-left: 5px solid #388e3c; }
+
+.disk80  { border-left: 5px solid #fbc02d; }
+.disk90  { border-left: 5px solid #f57c00; }
+.disk95  { border-left: 5px solid #d32f2f; }
+.disk100 { border-left: 5px solid #9c0006; }
+.diskall { border-left: 5px solid #607d8b; }
+
+.links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.link-card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+a.button {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 16px;
+    background: #222;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+}
+
+.footer {
+    margin-top: 35px;
+    color: #888;
+    font-size: 13px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>CloudLinux Resource Monitor</h1>
+
+<div class="subtitle">
+Hosting resource usage &amp; upgrade monitoring
+</div>
+
+<h2 class="section-title">⚙️ CPU / RAM</h2>
+
+<div class="cards">
+
+<div class="card upgrade">
+<div class="card-title">Upgrade Candidate</div>
+<div class="card-value" id="upgrade">-</div>
+</div>
+
+<div class="card review">
+<div class="card-title">Review</div>
+<div class="card-value" id="review">-</div>
+</div>
+
+<div class="card watch">
+<div class="card-title">Watch</div>
+<div class="card-value" id="watch">-</div>
+</div>
+
+<div class="card normal">
+<div class="card-title">Normal</div>
+<div class="card-value" id="normal">-</div>
+</div>
+
+</div>
+
+<h2 class="section-title">💾 Disk Usage</h2>
+
+<div class="cards">
+
+<div class="card diskall">
+<div class="card-title">Accounts Checked</div>
+<div class="card-value" id="disk-total">-</div>
+</div>
+
+<div class="card disk80">
+<div class="card-title">Disk ≥ 80%</div>
+<div class="card-value" id="disk-80">-</div>
+</div>
+
+<div class="card disk90">
+<div class="card-title">Disk ≥ 90%</div>
+<div class="card-value" id="disk-90">-</div>
+</div>
+
+<div class="card disk95">
+<div class="card-title">Disk ≥ 95%</div>
+<div class="card-value" id="disk-95">-</div>
+</div>
+
+<div class="card disk100">
+<div class="card-title">Over Quota ≥ 100%</div>
+<div class="card-value" id="disk-100">-</div>
+</div>
+
+</div>
+
+<div class="links">
+
+<div class="link-card">
+<h2>📊 Daily Report</h2>
+<p>Last 24 hours CloudLinux CPU and RAM resource usage.</p>
+<a class="button" href="#" id="daily">
+Open Daily Report
+</a>
+</div>
+
+<div class="link-card">
+<h2>📈 15-Day Report</h2>
+<p>Rolling 15-day CPU/RAM usage analysis.</p>
+<a class="button" href="#" id="report15">
+Open 15-Day Report
+</a>
+</div>
+
+<div class="link-card">
+<h2>💾 Disk Report</h2>
+<p>Daily cPanel disk quota usage.</p>
+<a class="button" href="#" id="diskReport">
+Open Disk Report
+</a>
+</div>
+
+</div>
+
+<div class="footer">
+CloudLinux Monitor • CPU/RAM Threshold: 80% • Disk Threshold: 80%
+</div>
+
+</div>
+
+<script>
+
+function localDate() {
+
+    const d = new Date();
+
+    const year = d.getFullYear();
+
+    const month =
+        String(d.getMonth() + 1).padStart(2, "0");
+
+    const day =
+        String(d.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+}
+
+const today = localDate();
+
+document.getElementById("daily").href =
+    "reports/report-" + today + ".html";
+
+document.getElementById("report15").href =
+    "reports/report-15day-" + today + ".html";
+
+document.getElementById("diskReport").href =
+    "reports/report-disk-" + today + ".html";
+
+
+/* 15-Day */
+
+fetch("data/15day-" + today + ".json", {
+    cache: "no-store"
+})
+
+.then(response => {
+
+    if (!response.ok)
+        throw new Error("15-day JSON not found");
+
+    return response.json();
+
+})
+
+.then(users => {
+
+    document.getElementById("upgrade").textContent =
+        users.filter(
+            u => u.status === "Upgrade Candidate"
+        ).length;
+
+    document.getElementById("review").textContent =
+        users.filter(
+            u => u.status === "Review"
+        ).length;
+
+    document.getElementById("watch").textContent =
+        users.filter(
+            u => u.status === "Watch"
+        ).length;
+
+    document.getElementById("normal").textContent =
+        users.filter(
+            u => u.status === "Normal"
+        ).length;
+
+})
+
+.catch(() => {});
+
+
+/* Disk */
+
+fetch("data/disk-" + today + ".json", {
+    cache: "no-store"
+})
+
+.then(response => {
+
+    if (!response.ok)
+        throw new Error("Disk JSON not found");
+
+    return response.json();
+
+})
+
+.then(data => {
+
+    const accounts =
+        data.accounts || [];
+
+    document.getElementById("disk-total").textContent =
+        accounts.length;
+
+    document.getElementById("disk-80").textContent =
+        accounts.filter(
+            a => Number(a.disk_percent) >= 80
+        ).length;
+
+    document.getElementById("disk-90").textContent =
+        accounts.filter(
+            a => Number(a.disk_percent) >= 90
+        ).length;
+
+    document.getElementById("disk-95").textContent =
+        accounts.filter(
+            a => Number(a.disk_percent) >= 95
+        ).length;
+
+    document.getElementById("disk-100").textContent =
+        accounts.filter(
+            a => Number(a.disk_percent) >= 100
+        ).length;
+
+})
+
+.catch(() => {});
+
+</script>
+
+</body>
+</html>
